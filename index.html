@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YM MUSIC — 배우는 음악에서, 하는 음악으로.</title>
+<meta name="description" content="경기도 동탄 실용음악학원 YM MUSIC. 배우는 음악에서, 하는 음악으로. Vocal · Guitar · Drum · Piano · Bass · MIDI · Composition">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340..600;1,9..144,400..600&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css" />
+
+<style>
+/* ============================================================
+   YM MUSIC — design tokens
+   ============================================================ */
+:root{
+  --bg:        #FAF6EE;   /* warm off-white */
+  --bg-soft:   #F1EADA;   /* soft warm sand — alt section bg */
+  --bg-amber:  #FBEBD3;   /* pale amber tint — CTA punch block */
+  --ink:       #201C17;   /* charcoal black */
+  --ink-soft:  #6B6355;   /* deep warm gray — secondary text */
+  --ink-faint: #A79E8C;   /* soft gray — tertiary / captions */
+  --line:      #E1D7C2;   /* hairline */
+  --accent:    #DC7A1E;   /* stage-amber — the one accent color */
+  --accent-ink:#8A4E10;   /* darker amber for text-on-light use */
+  --paper:     #FFFFFF;
+
+  --font-kr:  'PretendardVariable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-en:  'Fraunces', serif;
+  --font-kr-serif: 'Noto Serif KR', serif;
+
+  --header-h: 76px;
+  --container: 1180px;
+  --edge: clamp(20px, 5vw, 64px);
+
+  --ease: cubic-bezier(.22,.68,0,1);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top: calc(var(--header-h) + 12px);
+}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-kr);
+  font-weight:400;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,svg{ display:block; max-width:100%; }
+a{ color:inherit; text-decoration:none; }
+button{ font-family:inherit; cursor:pointer; }
+ul{ margin:0; padding:0; list-style:none; }
+h1,h2,h3,p{ margin:0; }
+
+.container{ max-width:var(--container); margin-inline:auto; padding-inline:var(--edge); }
+
+.eyebrow{
+  display:inline-flex;
+  align-self:flex-start;
+  align-items:center;
+  gap:8px;
+  background:var(--ink);
+  color:var(--bg);
+  font-family:var(--font-kr);
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:.03em;
+  padding:9px 18px;
+  border-radius:999px;
+  transform:rotate(-2deg);
+  box-shadow:4px 4px 0 var(--accent);
+}
+
+.en{ font-family:var(--font-en); font-style:italic; }
+
+section{ position:relative; }
+.section-pad{ padding-block: clamp(72px, 11vw, 148px); }
+.section-pad-tight{ padding-block: clamp(56px, 8vw, 96px); }
+
+.section-head{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+  max-width:760px;
+  margin-bottom:clamp(40px,6vw,76px);
+}
+.section-head h2{
+  font-size:clamp(30px, 4.4vw, 52px);
+  font-weight:700;
+  letter-spacing:-.01em;
+  line-height:1.28;
+}
+.section-head p{
+  color:var(--ink-soft);
+  font-size:clamp(15px,1.5vw,18px);
+  max-width:52ch;
+}
+
+/* buttons */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:15px 28px;
+  border-radius:999px;
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:-.01em;
+  transition:transform .35s var(--ease), background .3s, color .3s, border-color .3s;
+  white-space:nowrap;
+}
+.btn--primary{ background:var(--ink); color:var(--bg); }
+.btn--primary:hover{ background:var(--accent); transform:translateY(-2px); }
+.btn--ghost{ background:transparent; color:var(--ink); border:1px solid var(--line); }
+.btn--ghost:hover{ border-color:var(--ink); transform:translateY(-2px); }
+.btn--amber{ background:var(--accent); color:#fff; }
+.btn--amber:hover{ background:var(--accent-ink); transform:translateY(-2px); }
+.btn svg{ width:15px; height:15px; }
+
+/* ============================================================
+   Reveal-on-scroll
+   ============================================================ */
+.reveal{ opacity:0; transform:translateY(28px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
+.reveal.in-view{ opacity:1; transform:translateY(0); }
+.reveal-stagger > *{ transition-delay:calc(var(--i,0) * 80ms); }
+@media (prefers-reduced-motion: reduce){
+  .reveal{ opacity:1; transform:none; transition:none; }
+  html{ scroll-behavior:auto; }
+}
+
+/* ============================================================
+   Waveform divider — the page's signature thread
+   ============================================================ */
+.waveform{
+  display:block;
+  width:100%;
+  height:clamp(34px,5vw,56px);
+  overflow:visible;
+}
+.waveform path{
+  fill:none;
+  stroke:var(--accent);
+  stroke-width:1.6;
+  stroke-linecap:round;
+  opacity:.55;
+  stroke-dasharray:1400;
+  stroke-dashoffset:1400;
+  transition:stroke-dashoffset 1.6s var(--ease);
+}
+.waveform.in-view path{ stroke-dashoffset:0; }
+
+/* ============================================================
+   Media placeholder tiles — swap for real photo/video later
+   Usage: <div class="ph ph--1" data-label="학생 연주 사진"></div>
+   ============================================================ */
+.ph{
+  position:relative;
+  border-radius:18px;
+  overflow:hidden;
+  isolation:isolate;
+  min-height:180px;
+  display:flex;
+  align-items:flex-end;
+}
+.ph::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:
+    radial-gradient(120% 140% at 15% 0%, rgba(255,255,255,.55), transparent 55%),
+    var(--ph-grad);
+}
+.ph::after{
+  /* subtle organic grain so flat gradients read as "photographic" */
+  content:"";
+  position:absolute; inset:0;
+  opacity:.5;
+  mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+.ph--1{ --ph-grad: linear-gradient(155deg,#F3D9A8,#DC7A1E 120%); }
+.ph--2{ --ph-grad: linear-gradient(155deg,#EFE6D2,#B7A98A 120%); }
+.ph--3{ --ph-grad: linear-gradient(155deg,#F6E7D0,#C98B4A 120%); }
+.ph--4{ --ph-grad: linear-gradient(155deg,#E9DFC9,#8A7C60 120%); }
+.ph--5{ --ph-grad: linear-gradient(155deg,#F8E3C4,#E2984B 120%); }
+.ph--6{ --ph-grad: linear-gradient(155deg,#EFE2C4,#A98E5C 120%); }
+.ph__tag{
+  position:relative; z-index:1;
+  margin:14px;
+  padding:7px 13px;
+  border-radius:999px;
+  background:rgba(32,28,23,.62);
+  backdrop-filter:blur(6px);
+  color:#fff;
+  font-size:11.5px;
+  letter-spacing:.06em;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.ph__tag svg{ width:12px; height:12px; opacity:.85; }
+.ph--video .ph__play{
+  position:absolute; z-index:1; inset:0;
+  margin:auto;
+  width:52px; height:52px;
+  border-radius:50%;
+  background:rgba(255,255,255,.85);
+  display:flex; align-items:center; justify-content:center;
+}
+.ph--video .ph__play svg{ width:16px; height:16px; margin-left:2px; }
+
+/* When a .ph placeholder is swapped for a real <img> or <video>,
+   drop it in as the first child and it will fill the tile and
+   crop to cover automatically — no extra classes needed. */
+.ph img, .ph video{
+  position:absolute; inset:0; z-index:0;
+  width:100%; height:100%;
+  object-fit:cover;
+}
+
+/* ============================================================
+   YouTube Shorts lightbox — triggered from .ph--video tiles
+   that carry a data-yt attribute (see INSTAGRAM section).
+   ============================================================ */
+.ph--video[data-yt]{ cursor:pointer; }
+.ph--video[data-yt] .ph__play{ transition:transform .3s var(--ease), background .3s; }
+.ph--video[data-yt]:hover .ph__play{ transform:scale(1.08); background:#fff; }
+
+.yt-modal{
+  position:fixed; inset:0; z-index:200;
+  display:flex; align-items:center; justify-content:center;
+  padding:32px 16px;
+  background:rgba(32,28,23,.86);
+  backdrop-filter:blur(6px);
+  opacity:0; pointer-events:none;
+  transition:opacity .35s var(--ease);
+}
+.yt-modal.open{ opacity:1; pointer-events:auto; }
+.yt-modal__box{
+  position:relative;
+  width:min(360px, 100%);
+  aspect-ratio:9/16;
+  border-radius:22px;
+  overflow:hidden;
+  background:var(--ink);
+  box-shadow:0 40px 80px -20px rgba(0,0,0,.6);
+  transform:translateY(18px) scale(.97);
+  transition:transform .4s var(--ease), width .3s var(--ease), aspect-ratio .3s var(--ease);
+}
+.yt-modal__box.wide{ width:min(720px, 100%); aspect-ratio:16/9; }
+.yt-modal.open .yt-modal__box{ transform:translateY(0) scale(1); }
+.yt-modal__box iframe{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  border:0;
+}
+.yt-modal__close{
+  position:absolute; top:-46px; right:0;
+  width:34px; height:34px;
+  border-radius:50%;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.3);
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transition:background .25s;
+}
+.yt-modal__close:hover{ background:rgba(255,255,255,.28); }
+.yt-modal__close svg{ width:16px; height:16px; }
+@media (max-width:480px){
+  .yt-modal__close{ top:-42px; }
+}
+
+/* ============================================================
+   Photo lightbox — triggered from .ph tiles that carry a
+   data-photo attribute (FACILITY section stills).
+   ============================================================ */
+.ph[data-photo]{ cursor:zoom-in; }
+.ph[data-photo] img{ transition:transform .5s var(--ease); }
+.ph[data-photo]:hover img{ transform:scale(1.04); }
+
+.photo-modal{
+  position:fixed; inset:0; z-index:200;
+  display:flex; align-items:center; justify-content:center;
+  padding:32px 16px;
+  background:rgba(32,28,23,.86);
+  backdrop-filter:blur(6px);
+  opacity:0; pointer-events:none;
+  transition:opacity .35s var(--ease);
+}
+.photo-modal.open{ opacity:1; pointer-events:auto; }
+.photo-modal__box{
+  position:relative;
+  max-width:min(920px, 92vw);
+  max-height:86vh;
+  border-radius:18px;
+  overflow:hidden;
+  background:var(--ink);
+  box-shadow:0 40px 80px -20px rgba(0,0,0,.6);
+  transform:translateY(18px) scale(.97);
+  transition:transform .4s var(--ease);
+}
+.photo-modal.open .photo-modal__box{ transform:translateY(0) scale(1); }
+.photo-modal__box img{
+  display:block;
+  max-width:min(920px, 92vw);
+  max-height:86vh;
+  width:auto; height:auto;
+  object-fit:contain;
+}
+.photo-modal__close{
+  position:absolute; top:-46px; right:0;
+  width:34px; height:34px;
+  border-radius:50%;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.3);
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transition:background .25s;
+}
+.photo-modal__close:hover{ background:rgba(255,255,255,.28); }
+.photo-modal__close svg{ width:16px; height:16px; }
+@media (max-width:480px){
+  .photo-modal__close{ top:-42px; }
+}
+
+/* ============================================================
+   Blog — auto-loaded Naver Blog cards
+   ============================================================ */
+.blog__track{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+.blog__card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  display:flex; flex-direction:column;
+  transition:transform .35s var(--ease), box-shadow .35s, border-color .35s;
+}
+.blog__card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 22px 40px -22px rgba(32,28,23,.28);
+  border-color:transparent;
+}
+.blog__thumb{
+  aspect-ratio:4/3;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+}
+.blog__thumb.ph{ border-radius:0; }
+.blog__body{ padding:16px 18px 20px; display:flex; flex-direction:column; gap:8px; }
+.blog__date{ font-family:var(--font-en); font-style:italic; font-size:12px; color:var(--ink-faint); }
+.blog__body h3{
+  font-size:15px; font-weight:600; line-height:1.5; color:var(--ink);
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.blog__fallback{
+  grid-column:1/-1;
+  display:flex; flex-direction:column; align-items:center;
+  gap:16px;
+  text-align:center; color:var(--ink-soft); font-size:15px;
+  padding:48px 24px;
+}
+.blog__fallback .chip-sticker{ align-self:center; }
+@media (max-width:880px){ .blog__track{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:560px){ .blog__track{ grid-template-columns:1fr; } }
+
+/* ============================================================
+   Reels — real Instagram embeds (official oEmbed), horizontal
+   scroll strip. Each item is a fixed-width flex child so the
+   native Instagram widget (which sets its own internal width)
+   has a predictable box to sit in.
+   ============================================================ */
+.reels__label{
+  font-family:var(--font-en); font-style:italic; font-weight:500;
+  font-size:13px; color:var(--ink-faint); letter-spacing:.02em;
+  margin-top:clamp(36px,5vw,56px); margin-bottom:16px;
+}
+.reels__track{
+  display:flex; gap:16px;
+  overflow-x:auto; padding-bottom:14px;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+.reels__track::-webkit-scrollbar{ height:6px; }
+.reels__track::-webkit-scrollbar-thumb{ background:var(--line); border-radius:99px; }
+.reels__item{ flex:0 0 300px; scroll-snap-align:start; }
+@media (max-width:560px){ .reels__item{ flex-basis:84vw; } }
+
+/* ============================================================
+   Nav
+   ============================================================ */
+.nav{
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  height:var(--header-h);
+  display:flex; align-items:center;
+  background:transparent;
+  transition:background .4s var(--ease), border-color .4s var(--ease), box-shadow .4s;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:rgba(250,246,238,.86);
+  backdrop-filter:blur(14px);
+  border-color:var(--line);
+}
+.nav .container{ display:flex; align-items:center; justify-content:space-between; width:100%; }
+.nav__logo{ font-family:var(--font-en); font-style:italic; font-weight:600; font-size:20px; letter-spacing:-.01em; }
+.nav__links{ display:flex; align-items:center; gap:clamp(18px,2.2vw,34px); }
+.nav__links a{
+  font-size:13px; font-weight:600; letter-spacing:.06em;
+  position:relative; padding:6px 0;
+}
+.nav__links a::after{
+  content:""; position:absolute; left:0; right:100%; bottom:0; height:1px;
+  background:var(--accent); transition:right .35s var(--ease);
+}
+.nav__links a:hover::after{ right:0; }
+.nav__cta{ display:none; }
+.nav__burger{
+  display:none;
+  width:38px; height:38px;
+  border:none; background:none;
+  flex-direction:column; align-items:center; justify-content:center; gap:5px;
+}
+.nav__burger span{ width:20px; height:1.6px; background:var(--ink); transition:transform .3s, opacity .3s; }
+.nav.open .nav__burger span:nth-child(1){ transform:translateY(6.6px) rotate(45deg); }
+.nav.open .nav__burger span:nth-child(2){ opacity:0; }
+.nav.open .nav__burger span:nth-child(3){ transform:translateY(-6.6px) rotate(-45deg); }
+
+@media (max-width:880px){
+  .nav__links{
+    position:fixed; top:var(--header-h); left:0; right:0;
+    flex-direction:column; align-items:flex-start; gap:0;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    max-height:0; overflow:hidden;
+    transition:max-height .45s var(--ease);
+  }
+  .nav.open .nav__links{ max-height:520px; }
+  .nav__links a{ width:100%; padding:16px var(--edge); border-top:1px solid var(--line); font-size:15px; }
+  .nav__links a::after{ display:none; }
+  .nav__burger{ display:flex; }
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero{
+  min-height:min(100svh,960px);
+  display:flex; flex-direction:column; justify-content:center;
+  padding-top:var(--header-h);
+  padding-bottom:clamp(16px,3vw,28px);
+  position:relative;
+  overflow:hidden; /* contains the ambient glows + collage safely */
+}
+.hero__glow{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:0;
+  filter:blur(50px);
+}
+.hero__glow--1{
+  width:560px; height:560px;
+  top:-14%; right:-8%;
+  background:radial-gradient(circle, rgba(220,122,30,.18), transparent 68%);
+}
+.hero__glow--2{
+  width:420px; height:420px;
+  bottom:-16%; left:-10%;
+  background:radial-gradient(circle, rgba(220,122,30,.1), transparent 70%);
+}
+.hero__corner-mark{
+  position:absolute;
+  right:clamp(20px,4vw,64px);
+  bottom:clamp(18px,3vw,32px);
+  width:64px; height:64px;
+  opacity:.14;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* -- sticker chip + kinetic headline -- */
+.hero__top{ position:relative; z-index:2; }
+.chip-sticker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--ink);
+  color:var(--bg);
+  font-family:var(--font-kr);
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:.02em;
+  padding:9px 18px;
+  border-radius:999px;
+  transform:rotate(-3deg);
+  box-shadow:4px 4px 0 var(--accent);
+}
+.hero__h1{
+  margin-top:26px;
+  font-family:var(--font-kr-serif);
+  font-weight:700;
+  font-size:clamp(36px,7vw,82px);
+  letter-spacing:-.01em;
+  line-height:1.16;
+  max-width:15ch;
+}
+.hero__h1 .mark{
+  background-image:linear-gradient(180deg, transparent 60%, rgba(220,122,30,.42) 60%);
+  box-decoration-break:clone;
+  -webkit-box-decoration-break:clone;
+}
+.hero__spark{
+  position:absolute;
+  color:var(--accent);
+  pointer-events:none;
+  animation:spark-twinkle 2.6s ease-in-out infinite;
+}
+.hero__spark--1{ top:-4%; left:39%; width:24px; }
+.hero__spark--2{ top:58%; left:1%; width:16px; opacity:.85; animation-delay:.5s; }
+@keyframes spark-twinkle{
+  0%,100%{ opacity:.35; transform:scale(.85) rotate(0deg); }
+  50%{ opacity:1; transform:scale(1.2) rotate(14deg); }
+}
+
+/* -- marquee ribbon -- */
+.marquee{
+  position:relative;
+  z-index:2;
+  width:104vw;
+  margin-left:-2vw;
+  margin-block:clamp(28px,4.5vw,44px);
+  background:var(--ink);
+  overflow:hidden;
+  transform:rotate(-1.3deg);
+  box-shadow:0 14px 30px -18px rgba(32,28,23,.5);
+}
+.marquee__track{
+  display:flex;
+  width:max-content;
+  white-space:nowrap;
+  gap:32px;
+  padding:13px 0;
+  animation:hero-marquee 26s linear infinite;
+}
+.marquee__track span{
+  font-family:var(--font-kr);
+  font-weight:700;
+  font-size:clamp(13px,1.7vw,18px);
+  letter-spacing:.05em;
+  color:var(--bg);
+}
+.marquee__track span.dot{ color:var(--accent); }
+@keyframes hero-marquee{
+  from{ transform:translateX(0); }
+  to{ transform:translateX(-50%); }
+}
+
+/* -- lower: pitch + photo collage -- */
+.hero__lower{
+  display:grid;
+  grid-template-columns:1fr 1.05fr;
+  gap:clamp(24px,4vw,64px);
+  align-items:center;
+  position:relative;
+  z-index:2;
+}
+.hero__pitch{ max-width:480px; }
+.hero__sub{
+  font-family:var(--font-en);
+  font-style:italic;
+  font-size:clamp(16px,1.8vw,21px);
+  color:var(--accent-ink);
+  letter-spacing:.01em;
+}
+.hero__tagline{
+  margin-top:14px;
+  font-size:16px;
+  color:var(--ink-soft);
+  line-height:1.65;
+}
+.hero__actions{ margin-top:30px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.btn--primary svg{ width:13px; height:13px; margin-left:2px; transition:transform .3s var(--ease); }
+.btn--primary:hover svg{ transform:translateX(3px); }
+.btn--soft{
+  background:var(--bg-soft);
+  color:var(--ink);
+  border:none;
+}
+.btn--soft:hover{ background:#E9DEC7; transform:translateY(-2px); }
+.btn--soft svg{ width:14px; height:14px; }
+.hero__actions .btn--primary{
+  border:2px solid var(--ink);
+  box-shadow:5px 5px 0 var(--accent);
+  transition:transform .2s var(--ease), box-shadow .2s var(--ease), background .3s;
+}
+.hero__actions .btn--primary:hover{
+  transform:translate(-2px,-2px);
+  box-shadow:7px 7px 0 var(--accent);
+  background:var(--ink);
+}
+.hero__actions .btn--soft{ border:2px solid transparent; }
+.hero__actions .btn--soft:hover{ border-color:var(--ink); }
+
+.hero__collage{
+  position:relative;
+  min-height:clamp(400px,40vw,500px);
+}
+.collage__photo{
+  position:absolute;
+  border-radius:16px;
+  border:6px solid var(--paper);
+  box-shadow:0 20px 44px -18px rgba(32,28,23,.4);
+  overflow:hidden;
+  transition:transform .4s var(--ease);
+}
+.collage__photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+.collage__photo--a{ width:calc(58% + (clamp(84px,9vw,112px) / 2)); aspect-ratio:1/1.5; left:0; bottom:4%; transform:rotate(-4deg); z-index:1; }
+.collage__photo--b{ width:60%; aspect-ratio:1/0.86; right:-24%; bottom:4%; transform:rotate(5deg); z-index:2; }
+.hero__collage:hover .collage__photo--a{ transform:rotate(-6deg) translateY(-4px); }
+.hero__collage:hover .collage__photo--b{ transform:rotate(7deg) translateY(-4px); }
+
+.collage__stamp{
+  position:absolute;
+  z-index:3;
+  top:-3%;
+  left:58%;
+  width:clamp(84px,9vw,112px);
+  aspect-ratio:1/1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.collage__stamp svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  color:var(--ink);
+  animation:stamp-spin 18s linear infinite;
+}
+.collage__stamp-core{
+  position:relative;
+  width:56%;
+  aspect-ratio:1/1;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-en);
+  font-style:italic;
+  font-weight:600;
+  font-size:clamp(13px,1.4vw,17px);
+  box-shadow:0 8px 20px -8px rgba(32,28,23,.5);
+}
+@keyframes stamp-spin{
+  from{ transform:rotate(0deg); }
+  to{ transform:rotate(360deg); }
+}
+@media (prefers-reduced-motion:reduce){
+  .marquee__track, .collage__stamp svg, .hero__spark{ animation:none; }
+}
+@media (max-width:880px){
+  .hero{ min-height:auto; }
+  .hero__h1{ max-width:none; }
+  .hero__lower{ grid-template-columns:1fr; }
+  .hero__collage{ order:-1; min-height:clamp(280px,78vw,380px); margin-bottom:6px; margin-top:36px; }
+  .collage__photo--a{ aspect-ratio:1/0.95; }
+  .hero__corner-mark{ display:none; }
+  .marquee{ margin-block:22px; }
+  .hero__spark{ display:none; }
+}
+.hero__wave{ margin-top:clamp(48px,7vw,84px); position:relative; z-index:1; }
+
+/* ============================================================
+   About
+   ============================================================ */
+.about__lead{
+  font-family:var(--font-en);
+  font-style:italic;
+  font-size:clamp(20px,2.6vw,30px);
+  font-weight:500;
+  line-height:1.5;
+  max-width:760px;
+  color:var(--ink);
+}
+.about__grid{
+  margin-top:clamp(48px,6vw,80px);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:20px;
+  overflow:hidden;
+}
+.about__item{
+  background:var(--bg);
+  padding:clamp(26px,3vw,38px) clamp(22px,2.6vw,30px);
+  display:flex; flex-direction:column; gap:16px;
+  min-height:220px;
+}
+.about__num{ font-family:var(--font-en); font-style:italic; color:var(--ink-faint); font-size:13px; }
+.about__item h3{ font-size:20px; font-weight:700; letter-spacing:-.01em; }
+.about__item h3 .en{ display:block; font-size:12.5px; font-weight:500; color:var(--accent-ink); margin-top:6px; text-transform:uppercase; letter-spacing:.1em; }
+.about__item p{ color:var(--ink-soft); font-size:14.5px; margin-top:auto; }
+@media (max-width:880px){
+  .about__grid{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:520px){
+  .about__grid{ grid-template-columns:1fr; }
+}
+
+/* ============================================================
+   Story
+   ============================================================ */
+.story{ background:var(--bg-soft); }
+.story__wrap{
+  display:grid;
+  grid-template-columns:minmax(0,560px) 1fr;
+  gap:clamp(28px,5vw,72px);
+  align-items:start;
+}
+.story__quote{
+  font-family:var(--font-en);
+  font-style:italic;
+  font-weight:500;
+  font-size:clamp(21px,2.6vw,30px);
+  line-height:1.5;
+  color:var(--accent-ink);
+  border-left:3px solid var(--accent);
+  padding-left:20px;
+  margin-bottom:26px;
+}
+.story__body p{
+  color:var(--ink-soft);
+  font-size:clamp(15px,1.5vw,16.5px);
+  line-height:1.85;
+}
+.story__body p + p{ margin-top:16px; }
+.story__body p b{ color:var(--ink); font-weight:600; }
+.story__sign{
+  margin-top:30px;
+  font-family:var(--font-en);
+  font-style:italic;
+  font-size:14px;
+  color:var(--ink-faint);
+}
+@media (max-width:880px){
+  .story__wrap{ grid-template-columns:1fr; }
+}
+
+/* ============================================================
+   Lesson
+   ============================================================ */
+.lesson__grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.lesson__card{
+  position:relative;
+  border-radius:18px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  padding:28px 26px;
+  min-height:186px;
+  display:flex; flex-direction:column; justify-content:space-between;
+  overflow:hidden;
+  transition:border-color .35s, box-shadow .35s, transform .35s var(--ease);
+}
+.lesson__card:hover, .lesson__card.active{
+  border-color:transparent;
+  box-shadow:0 22px 40px -20px rgba(32,28,23,.28);
+  transform:translateY(-4px);
+}
+.lesson__card::before{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(155deg,var(--bg-amber),var(--paper) 75%);
+  opacity:0; transition:opacity .35s;
+  z-index:0;
+}
+.lesson__card:hover::before, .lesson__card.active::before{ opacity:1; }
+.lesson__card > *{ position:relative; z-index:1; }
+.lesson__card-top{ display:flex; align-items:center; justify-content:space-between; }
+.lesson__card h3{ font-family:var(--font-en); font-style:italic; font-weight:600; font-size:22px; letter-spacing:0; }
+.lesson__num{ font-size:11px; color:var(--ink-faint); }
+.lesson__desc{
+  font-size:14.5px; color:var(--ink-soft); line-height:1.55;
+  max-height:0; opacity:0; overflow:hidden;
+  transition:max-height .4s var(--ease), opacity .4s, margin-top .4s;
+}
+.lesson__card:hover .lesson__desc, .lesson__card.active .lesson__desc{
+  max-height:120px; opacity:1; margin-top:12px;
+}
+.lesson__link{
+  font-size:12.5px; font-weight:600; letter-spacing:.02em;
+  display:inline-flex; align-items:center; gap:6px;
+  color:var(--accent-ink);
+}
+.lesson__link svg{ width:11px; height:11px; transition:transform .3s; }
+.lesson__card:hover .lesson__link svg{ transform:translateX(3px); }
+@media (max-width:880px){ .lesson__grid{ grid-template-columns:repeat(2,1fr);} }
+@media (max-width:560px){ .lesson__grid{ grid-template-columns:1fr;} }
+
+/* ============================================================
+   Play Together
+   ============================================================ */
+.together{ background:var(--bg-soft); }
+.together__intro{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:clamp(24px,4vw,48px);
+  margin-bottom:clamp(40px,6vw,76px);
+}
+.together__polaroid{
+  position:relative;
+  width:clamp(170px,17vw,230px);
+  background:var(--paper);
+  border-radius:14px;
+  padding:9px 9px 30px;
+  box-shadow:0 20px 40px -18px rgba(32,28,23,.35);
+  transform:rotate(4deg);
+  transition:transform .35s var(--ease);
+  justify-self:end;
+}
+.together__polaroid:hover{ transform:rotate(0deg) translateY(-4px); }
+.together__polaroid img{ width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:8px; display:block; }
+.together__polaroid-cap{
+  position:absolute;
+  left:0; right:0; bottom:9px;
+  text-align:center;
+  font-family:var(--font-en);
+  font-style:italic;
+  font-size:12.5px;
+  color:var(--ink-soft);
+}
+@media (max-width:760px){
+  .together__intro{ grid-template-columns:1fr; }
+  .together__polaroid{ justify-self:center; margin-top:4px; width:200px; }
+}
+.together__grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  grid-auto-rows:120px;
+  gap:14px;
+}
+.together__grid .ph:nth-child(1){ grid-column:span 4; grid-row:span 3; }
+.together__grid .ph:nth-child(2){ grid-column:span 2; grid-row:span 2; }
+.together__grid .ph:nth-child(3){ grid-column:span 2; grid-row:span 2; }
+.together__grid .ph:nth-child(4){ grid-column:span 3; grid-row:span 2; }
+.together__grid .ph:nth-child(5){ grid-column:span 3; grid-row:span 2; }
+@media (max-width:880px){
+  .together__grid{ grid-template-columns:repeat(2,1fr); grid-auto-rows:150px; }
+  .together__grid .ph{ grid-column:span 1 !important; grid-row:span 2 !important; }
+}
+
+/* ============================================================
+   Facility
+   ============================================================ */
+.facility__grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.facility__grid .ph{ aspect-ratio:4/3.4; min-height:0; }
+@media (max-width:880px){
+  .facility__grid{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:560px){
+  .facility__grid{ grid-template-columns:1fr; }
+  .facility__grid .ph{ aspect-ratio:4/3; }
+}
+
+/* ============================================================
+   Admission
+   ============================================================ */
+.admission{
+  border-radius:28px;
+  background:linear-gradient(155deg,var(--bg-amber),var(--bg-soft));
+  padding:clamp(40px,6vw,80px);
+  display:grid;
+  grid-template-columns:1.3fr .9fr;
+  gap:clamp(30px,5vw,60px);
+  align-items:center;
+}
+.admission h2{ font-size:clamp(28px,3.6vw,42px); font-weight:700; letter-spacing:-.01em; line-height:1.32; }
+.admission p{ margin-top:18px; color:var(--ink-soft); font-size:15.5px; max-width:48ch; }
+.admission__chips{ display:flex; flex-wrap:wrap; gap:10px; margin-top:26px; }
+.chip{
+  font-family:var(--font-kr); font-weight:700;
+  font-size:12.5px; letter-spacing:.02em;
+  padding:8px 16px; border-radius:999px;
+  background:var(--paper); border:1.5px dashed var(--line); color:var(--ink-soft);
+  transform:rotate(-2deg);
+  display:inline-block;
+}
+.chip:nth-child(even){ transform:rotate(2deg); }
+.admission__side{ display:flex; flex-direction:column; gap:18px; }
+@media (max-width:880px){ .admission{ grid-template-columns:1fr; } }
+
+/* ============================================================
+   Instagram
+   ============================================================ */
+.insta__grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.insta__grid .ph{ aspect-ratio:1/1; min-height:0; }
+@media (max-width:700px){ .insta__grid{ grid-template-columns:repeat(2,1fr); } }
+.insta__foot{ margin-top:34px; display:flex; justify-content:center; }
+
+/* ============================================================
+   Contact
+   ============================================================ */
+.contact{
+  background:var(--ink);
+  color:var(--bg);
+  border-radius:32px;
+  margin-inline:var(--edge);
+  padding:clamp(56px,8vw,110px) clamp(28px,6vw,90px);
+  text-align:center;
+}
+.contact h2{
+  font-family:var(--font-en); font-style:italic; font-weight:600;
+  font-size:clamp(30px,5.4vw,64px); letter-spacing:-.01em;
+}
+.contact__kr{
+  margin-top:18px;
+  font-size:clamp(17px,2vw,22px);
+  color:#D9D2C4;
+  line-height:1.6;
+}
+.contact__actions{
+  margin-top:44px;
+  display:flex; justify-content:center; gap:14px; flex-wrap:wrap;
+}
+.contact .btn--ghost{ border-color:rgba(250,246,238,.28); color:var(--bg); }
+.contact .btn--ghost:hover{ border-color:var(--bg); }
+.contact__info{
+  margin-top:56px;
+  display:flex; justify-content:center; gap:clamp(24px,5vw,56px);
+  flex-wrap:wrap;
+  font-size:13.5px;
+  color:#B9B0A0;
+}
+.contact__info b{ display:block; color:var(--bg); font-weight:600; margin-bottom:6px; font-size:12px; letter-spacing:.06em; text-transform:uppercase; }
+
+/* ============================================================
+   Footer
+   ============================================================ */
+footer{ padding-block:44px; border-top:1px solid var(--line); }
+.footer__row{
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;
+}
+.footer__logo{ font-family:var(--font-en); font-style:italic; font-weight:600; font-size:18px; }
+.footer__links{ display:flex; gap:22px; flex-wrap:wrap; font-size:13px; color:var(--ink-soft); }
+.footer__links a:hover{ color:var(--ink); }
+.footer__copy{ margin-top:22px; font-size:12px; color:var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAV
+============================================================ -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="#top" class="nav__logo">YM MUSIC</a>
+    <nav class="nav__links" id="navLinks">
+      <a href="#story">STORY</a>
+      <a href="#about">ABOUT</a>
+      <a href="#lesson">LESSON</a>
+      <a href="#together">TOGETHER</a>
+      <a href="#facility">FACILITY</a>
+      <a href="#admission">ADMISSION</a>
+      <a href="#blog">BLOG</a>
+      <a href="#instagram">INSTAGRAM</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
+    <button class="nav__burger" id="navBurger" aria-label="메뉴 열기" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero">
+  <div class="hero__glow hero__glow--1" aria-hidden="true"></div>
+  <div class="hero__glow hero__glow--2" aria-hidden="true"></div>
+
+  <div class="container hero__top reveal">
+    <span class="chip-sticker">🎸 DONGTAN · YM MUSIC</span>
+    <h1 class="hero__h1">
+      배우는 음악에서,<br>
+      <span class="mark">하는 음악으로.</span>
+    </h1>
+    <svg class="hero__spark hero__spark--1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+    <svg class="hero__spark hero__spark--2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+  </div>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>VOCAL</span><span class="dot">★</span><span>GUITAR</span><span class="dot">★</span><span>DRUM</span><span class="dot">★</span><span>PIANO</span><span class="dot">★</span><span>BASS</span><span class="dot">★</span><span>MIDI</span><span class="dot">★</span><span>COMPOSITION</span><span class="dot">★</span>
+      <span>VOCAL</span><span class="dot">★</span><span>GUITAR</span><span class="dot">★</span><span>DRUM</span><span class="dot">★</span><span>PIANO</span><span class="dot">★</span><span>BASS</span><span class="dot">★</span><span>MIDI</span><span class="dot">★</span><span>COMPOSITION</span><span class="dot">★</span>
+    </div>
+  </div>
+
+  <div class="container hero__lower">
+    <div class="hero__pitch reveal">
+      <p class="hero__sub en">Real music. Real experience.</p>
+      <p class="hero__tagline">"좋아하는 음악을 시작하고, 나만의 음악을 만들어가는 곳, 와이엠뮤직"</p>
+      <div class="hero__actions">
+        <a href="https://blog.naver.com/ym-music/223195112124" target="_blank" rel="noopener" class="btn btn--primary">와이엠뮤직 알아보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="https://www.instagram.com/ym._.music_academy/" target="_blank" rel="noopener" class="btn btn--soft">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__collage reveal">
+      <div class="collage__photo collage__photo--a">
+        <img src="images/fullband-vocal-wide.jpg" alt="보컬과 밴드가 함께하는 YM MUSIC 라이브 무대" loading="eager">
+      </div>
+      <div class="collage__photo collage__photo--b">
+        <img src="images/group-celebration-stage.jpg" alt="무대를 마치고 함께 기뻐하는 YM MUSIC 학생들" loading="lazy">
+      </div>
+      <div class="collage__stamp" aria-hidden="true">
+        <svg viewBox="0 0 200 200">
+          <path id="heroStampCircle" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0" fill="none"/>
+          <text font-size="15" letter-spacing="2.2" fill="currentColor">
+            <textPath href="#heroStampCircle">REAL MUSIC · REAL STAGE · REAL MUSIC · REAL STAGE ·</textPath>
+          </text>
+        </svg>
+        <span class="collage__stamp-core">YM</span>
+      </div>
+    </div>
+  </div>
+
+  <svg class="hero__corner-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+    <path d="M8 44 C8 24, 24 8, 44 8" stroke="#201C17" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="8" cy="44" r="3" fill="#201C17"/>
+    <circle cx="44" cy="8" r="3" fill="#201C17"/>
+  </svg>
+
+  <div class="container hero__wave">
+    <svg class="waveform" viewBox="0 0 1200 56" preserveAspectRatio="none">
+      <path d="M0 28 L40 28 L52 8 L64 48 L76 14 L88 42 L100 22 L112 34 L124 28 L1200 28"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================================================
+     STORY
+============================================================ -->
+<section id="story" class="story section-pad-tight">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">STORY</span>
+      <h2>모든 시작은,<br>서툴렀습니다.</h2>
+    </div>
+
+    <div class="story__wrap reveal">
+      <div>
+        <p class="story__quote">"코드 세 개도 겨우 잡았어요."</p>
+      </div>
+      <div class="story__body">
+        <p>레슨 첫날, 기타를 처음 손에 쥔 한 학생이 학원 문을 열며 남긴 말이었습니다. 악보는 못 읽고, 박자는 자주 놓치고, 무대는 남의 이야기 같았죠.</p>
+        <p>그런데 매주 화요일 저녁, 작은 연습실에서 코드가 하나씩 늘어갔습니다. 석 달 뒤엔 좋아하던 노래를 처음부터 끝까지 연주해냈고, 반년 뒤에는 <b>처음으로 무대 위에 섰습니다.</b></p>
+        <p>와이엠뮤직에서는 이런 이야기가 특별하지 않습니다. 배우는 음악이 <b>하는 음악</b>이 되는 순간 — 그게 저희가 매일 만드는 일이니까요.</p>
+        <p class="story__sign">— YM MUSIC</p>
+      </div>
+    </div>
+  </div>
+  <div class="container hero__wave"><svg class="waveform" viewBox="0 0 1200 56" preserveAspectRatio="none"><path d="M0 28 L60 28 L72 10 L84 46 L96 20 L108 36 L120 28 L1200 28"/></svg></div>
+</section>
+
+<!-- ============================================================
+     ABOUT
+============================================================ -->
+<section id="about" class="section-pad">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">ABOUT</span>
+      <h2>음악을 배우는 것,<br>그 이상</h2>
+    </div>
+    <p class="about__lead reveal">음악을 배우고, 사람을 만나고,<br>무대에 서고, 나만의 음악을 만들어갑니다.</p>
+
+    <div class="about__grid reveal-stagger">
+      <div class="about__item reveal" style="--i:0">
+        <span class="about__num">01</span>
+        <h3>배우고 <span class="en">Learn</span></h3>
+        <p>악기와 이론을, 나에게 맞는 속도로 제대로 배웁니다.</p>
+      </div>
+      <div class="about__item reveal" style="--i:1">
+        <span class="about__num">02</span>
+        <h3>만들고 <span class="en">Create</span></h3>
+        <p>배운 것을 내 음악으로 옮기는 순간, 진짜 실력이 됩니다.</p>
+      </div>
+      <div class="about__item reveal" style="--i:2">
+        <span class="about__num">03</span>
+        <h3>함께하고 <span class="en">Together</span></h3>
+        <p>밴드와 합주 속에서, 음악은 훨씬 더 깊어집니다.</p>
+      </div>
+      <div class="about__item reveal" style="--i:3">
+        <span class="about__num">04</span>
+        <h3>무대에 서고 <span class="en">Perform</span></h3>
+        <p>무대 위에서, 그동안의 연습이 진짜 음악이 됩니다.</p>
+      </div>
+    </div>
+  </div>
+  <div class="container hero__wave"><svg class="waveform" viewBox="0 0 1200 56" preserveAspectRatio="none"><path d="M0 28 L120 28 L132 12 L144 44 L156 22 L168 34 L180 28 L1200 28"/></svg></div>
+</section>
+
+<!-- ============================================================
+     LESSON
+============================================================ -->
+<section id="lesson" class="section-pad">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">LESSON</span>
+      <h2>MUSIC LESSON</h2>
+      <p>내가 좋아하는 음악을, 내가 직접 연주할 수 있도록.</p>
+    </div>
+
+    <div class="lesson__grid reveal-stagger" id="lessonGrid">
+      <!-- each card: click/hover reveals description -->
+      <a href="https://blog.naver.com/ym-music/223197051345" target="_blank" rel="noopener" class="lesson__card reveal" style="--i:0">
+        <div class="lesson__card-top"><h3>Vocal</h3><span class="lesson__num">01</span></div>
+        <div>
+          <p class="lesson__desc">노래를 잘 부르는 것에서, 나만의 목소리를 찾는 것까지.</p>
+          <span class="lesson__link">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <a href="https://blog.naver.com/ym-music/223197023203" target="_blank" rel="noopener" class="lesson__card reveal" style="--i:1">
+        <div class="lesson__card-top"><h3>Guitar</h3><span class="lesson__num">02</span></div>
+        <div>
+          <p class="lesson__desc">좋아하는 음악을 직접 연주하는 즐거움.</p>
+          <span class="lesson__link">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <a href="https://blog.naver.com/ym-music/223197039881" target="_blank" rel="noopener" class="lesson__card reveal" style="--i:2">
+        <div class="lesson__card-top"><h3>Drum</h3><span class="lesson__num">03</span></div>
+        <div>
+          <p class="lesson__desc">혼자 치는 리듬에서, 밴드의 리듬으로.</p>
+          <span class="lesson__link">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <a href="https://blog.naver.com/ym-music/223197060257" target="_blank" rel="noopener" class="lesson__card reveal" style="--i:3">
+        <div class="lesson__card-top"><h3>Piano</h3><span class="lesson__num">04</span></div>
+        <div>
+          <p class="lesson__desc">손끝으로 완성하는 나만의 연주.</p>
+          <span class="lesson__link">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <a href="https://blog.naver.com/ym-music/223197067063" target="_blank" rel="noopener" class="lesson__card reveal" style="--i:4">
+        <div class="lesson__card-top"><h3>Bass</h3><span class="lesson__num">05</span></div>
+        <div>
+          <p class="lesson__desc">밴드의 중심을 잡는, 낮고 단단한 소리.</p>
+          <span class="lesson__link">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <a href="https://blog.naver.com/ym-music/223197077508" target="_blank" rel="noopener" class="lesson__card reveal" style="--i:5">
+        <div class="lesson__card-top"><h3>MIDI</h3><span class="lesson__num">06</span></div>
+        <div>
+          <p class="lesson__desc">머릿속의 음악을, 실제 음악으로.</p>
+          <span class="lesson__link">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <a href="https://blog.naver.com/ym-music/223197132105" target="_blank" rel="noopener" class="lesson__card reveal" style="--i:6">
+        <div class="lesson__card-top"><h3>Composition</h3><span class="lesson__num">07</span></div>
+        <div>
+          <p class="lesson__desc">떠오른 멜로디를, 완성된 한 곡으로.</p>
+          <span class="lesson__link">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PLAY TOGETHER
+============================================================ -->
+<section id="together" class="together section-pad">
+  <div class="container">
+    <div class="together__intro reveal">
+      <div class="section-head" style="margin-bottom:0;">
+        <span class="eyebrow">PLAY TOGETHER</span>
+        <h2>혼자 배우는 음악에서,<br>함께 만드는 음악으로.</h2>
+      </div>
+      <div class="together__polaroid">
+        <img src="images/concept-lounge-illustration.jpg" alt="와이엠뮤직 라운지를 상상하며 그린 일러스트">
+        <span class="together__polaroid-cap">함께, 여기서</span>
+      </div>
+    </div>
+
+    <div class="together__grid reveal-stagger">
+      <div class="ph ph--video reveal" style="--i:0" data-yt="i9uJVSoloeM" role="button" tabindex="0" aria-label="밴드 합주 영상 재생">
+        <img src="images/quartet-band-stage.jpg" alt="YM MUSIC 무대에서 합주하는 밴드">
+        <span class="ph__play"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4l14 8-14 8V4z" fill="#201C17"/></svg></span>
+        <span class="ph__tag">BAND</span>
+      </div>
+      <div class="ph reveal" style="--i:1">
+        <img src="images/trio-vocal-guitar-drum.jpg" alt="합주 중인 보컬과 밴드">
+        <span class="ph__tag">REHEARSAL</span>
+      </div>
+      <div class="ph ph--video reveal" style="--i:2" data-yt="VWmRMkfEE5Q" role="button" tabindex="0" aria-label="공연 영상 재생">
+        <img src="images/solo-electric-guitar-crowd.jpg" alt="관객 앞에서 연주하는 일렉기타 솔로">
+        <span class="ph__play"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4l14 8-14 8V4z" fill="#201C17"/></svg></span>
+        <span class="ph__tag">PERFORMANCE</span>
+      </div>
+      <div class="ph reveal" style="--i:3">
+        <img src="images/group-celebration-stage.jpg" alt="공연 후 무대에서 함께 기뻐하는 학생들">
+        <span class="ph__tag">COMMUNITY</span>
+      </div>
+      <div class="ph reveal" style="--i:4">
+        <img src="images/duo-bass-guitar-stage.jpg" alt="베이스와 기타를 함께 연습하는 학생들">
+        <span class="ph__tag">LESSON</span>
+      </div>
+    </div>
+
+    <p class="reels__label">RECENT REELS · 인스타그램에서 바로 보기</p>
+    <div class="reels__track reveal-stagger">
+      <div class="reels__item reveal">
+        <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DUsXIqgklvA/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:calc(100% - 2px);">
+          <div style="padding:16px;">
+            <a href="https://www.instagram.com/reel/DUsXIqgklvA/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+              <div style=" display: flex; flex-direction: row; align-items: center;">
+                <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                </div>
+              </div>
+              <div style="padding: 19% 0;"></div>
+              <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div>
+              <div style="padding-top: 8px;"><div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Instagram에서 이 게시물 보기</div></div>
+              <div style="padding: 12.5% 0;"></div>
+            </a>
+          </div>
+        </blockquote>
+      </div>
+      <div class="reels__item reveal">
+        <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DVTcqhQknZ4/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:calc(100% - 2px);">
+          <div style="padding:16px;">
+            <a href="https://www.instagram.com/reel/DVTcqhQknZ4/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+              <div style=" display: flex; flex-direction: row; align-items: center;">
+                <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                </div>
+              </div>
+              <div style="padding: 19% 0;"></div>
+              <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div>
+              <div style="padding-top: 8px;"><div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Instagram에서 이 게시물 보기</div></div>
+              <div style="padding: 12.5% 0;"></div>
+            </a>
+          </div>
+        </blockquote>
+      </div>
+      <div class="reels__item reveal">
+        <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DZ7dpNoSCu5/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:calc(100% - 2px);">
+          <div style="padding:16px;">
+            <a href="https://www.instagram.com/reel/DZ7dpNoSCu5/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+              <div style=" display: flex; flex-direction: row; align-items: center;">
+                <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                </div>
+              </div>
+              <div style="padding: 19% 0;"></div>
+              <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div>
+              <div style="padding-top: 8px;"><div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Instagram에서 이 게시물 보기</div></div>
+              <div style="padding: 12.5% 0;"></div>
+            </a>
+          </div>
+        </blockquote>
+      </div>
+      <div class="reels__item reveal">
+        <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DTDV_-1Eil4/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:calc(100% - 2px);">
+          <div style="padding:16px;">
+            <a href="https://www.instagram.com/reel/DTDV_-1Eil4/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+              <div style=" display: flex; flex-direction: row; align-items: center;">
+                <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                </div>
+              </div>
+              <div style="padding: 19% 0;"></div>
+              <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div>
+              <div style="padding-top: 8px;"><div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Instagram에서 이 게시물 보기</div></div>
+              <div style="padding: 12.5% 0;"></div>
+            </a>
+          </div>
+        </blockquote>
+      </div>
+      <div class="reels__item reveal">
+        <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DHvW-xyyxk3/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:calc(100% - 2px);">
+          <div style="padding:16px;">
+            <a href="https://www.instagram.com/reel/DHvW-xyyxk3/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+              <div style=" display: flex; flex-direction: row; align-items: center;">
+                <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                </div>
+              </div>
+              <div style="padding: 19% 0;"></div>
+              <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div>
+              <div style="padding-top: 8px;"><div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Instagram에서 이 게시물 보기</div></div>
+              <div style="padding: 12.5% 0;"></div>
+            </a>
+          </div>
+        </blockquote>
+      </div>
+      <div class="reels__item reveal">
+        <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DBbQt-OCdnq/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:calc(100% - 2px);">
+          <div style="padding:16px;">
+            <a href="https://www.instagram.com/reel/DBbQt-OCdnq/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+              <div style=" display: flex; flex-direction: row; align-items: center;">
+                <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                </div>
+              </div>
+              <div style="padding: 19% 0;"></div>
+              <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div>
+              <div style="padding-top: 8px;"><div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Instagram에서 이 게시물 보기</div></div>
+              <div style="padding: 12.5% 0;"></div>
+            </a>
+          </div>
+        </blockquote>
+      </div>
+      <div class="reels__item reveal">
+        <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DA0qH8VC00t/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:calc(100% - 2px);">
+          <div style="padding:16px;">
+            <a href="https://www.instagram.com/reel/DA0qH8VC00t/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+              <div style=" display: flex; flex-direction: row; align-items: center;">
+                <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                </div>
+              </div>
+              <div style="padding: 19% 0;"></div>
+              <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div>
+              <div style="padding-top: 8px;"><div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Instagram에서 이 게시물 보기</div></div>
+              <div style="padding: 12.5% 0;"></div>
+            </a>
+          </div>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FACILITY
+============================================================ -->
+<section id="facility" class="section-pad">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">FACILITY</span>
+      <h2>우리 학원을<br>소개합니다.</h2>
+      <p>레슨실부터 합주실, 녹음 공간까지 — 와이엠뮤직의 공간을 둘러보세요.</p>
+    </div>
+
+    <div class="facility__grid reveal-stagger">
+      <div class="ph ph--video reveal" style="--i:0" data-yt="W0eL-hfslAw" data-wide role="button" tabindex="0" aria-label="스테이지 영상 재생">
+        <img src="images/facility-stage-video.jpg" alt="YM MUSIC 스테이지">
+        <span class="ph__play"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4l14 8-14 8V4z" fill="#201C17"/></svg></span>
+        <span class="ph__tag">STAGE</span>
+      </div>
+      <div class="ph ph--video reveal" style="--i:1" data-yt="8ThjW2frwe8" role="button" tabindex="0" aria-label="피아노 레슨실 영상 재생">
+        <img src="images/facility-piano-video.jpg" alt="피아노 레슨실">
+        <span class="ph__play"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4l14 8-14 8V4z" fill="#201C17"/></svg></span>
+        <span class="ph__tag">PIANO ROOM</span>
+      </div>
+      <div class="ph reveal" style="--i:2" data-photo="images/facility-drum-photo.jpg" role="button" tabindex="0" aria-label="MIDI 스튜디오 사진 확대">
+        <img src="images/facility-drum-photo.jpg" alt="MIDI 스튜디오">
+        <span class="ph__tag">MIDI STUDIO</span>
+      </div>
+      <div class="ph reveal" style="--i:3" data-photo="images/facility-recording-photo.jpg" role="button" tabindex="0" aria-label="드럼룸 사진 확대">
+        <img src="images/facility-recording-photo.jpg" alt="드럼 연습실">
+        <span class="ph__tag">DRUM ROOM</span>
+      </div>
+      <div class="ph ph--video reveal" style="--i:4" data-yt="jHLrM7Ww12s" role="button" tabindex="0" aria-label="힐링룸 영상 재생">
+        <img src="images/facility-healing-video.jpg" alt="힐링룸">
+        <span class="ph__play"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4l14 8-14 8V4z" fill="#201C17"/></svg></span>
+        <span class="ph__tag">HEALING ROOM</span>
+      </div>
+      <div class="ph ph--video reveal" style="--i:5" data-yt="KWCSgADlEXw" role="button" tabindex="0" aria-label="연습실 영상 재생">
+        <img src="images/facility-practice-video.jpg" alt="레슨실 안내판">
+        <span class="ph__play"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4l14 8-14 8V4z" fill="#201C17"/></svg></span>
+        <span class="ph__tag">PRACTICE ROOM</span>
+      </div>
+      <div class="ph reveal" style="--i:6" data-photo="images/facility-lounge-photo.jpg" role="button" tabindex="0" aria-label="라운지 사진 확대">
+        <img src="images/facility-lounge-photo.jpg" alt="거울과 소파가 있는 라운지 공간">
+        <span class="ph__tag">LOUNGE</span>
+      </div>
+      <div class="ph reveal" style="--i:7" data-photo="images/facility-ensemble-photo.jpg" role="button" tabindex="0" aria-label="연습실 사진 확대">
+        <img src="images/facility-ensemble-photo.jpg" alt="연습실">
+        <span class="ph__tag">PRACTICE ROOM</span>
+      </div>
+      <div class="ph reveal" style="--i:8" data-photo="images/facility-guitarroom-photo.jpg" role="button" tabindex="0" aria-label="연습실 사진 확대">
+        <img src="images/facility-guitarroom-photo.jpg" alt="연습실">
+        <span class="ph__tag">PRACTICE ROOM</span>
+      </div>
+      <div class="ph reveal" style="--i:9" data-photo="images/concept-practiceroom-illustration.jpg" role="button" tabindex="0" aria-label="연습실 일러스트 확대">
+        <img src="images/concept-practiceroom-illustration.jpg" alt="와이엠뮤직 연습실을 그린 일러스트">
+        <span class="ph__tag">ILLUSTRATION</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Instagram embed script — loads once, processes every
+     .instagram-media blockquote already present in the page above -->
+<script async src="//www.instagram.com/embed.js"></script>
+
+<!-- ============================================================
+     ADMISSION
+============================================================ -->
+<section id="admission" class="section-pad-tight">
+  <div class="container">
+    <div class="admission reveal">
+      <div>
+        <span class="eyebrow">ADMISSION</span>
+        <h2 style="margin-top:20px;">진짜 음악을 하고 싶은 학생에게,<br>더 깊은 길을 열어줍니다.</h2>
+        <p>입시생을 위한 개인 맞춤 커리큘럼으로, 테크닉과 음악성 그리고 포트폴리오까지 함께 준비합니다.</p>
+        <div class="admission__chips">
+          <span class="chip">Individual</span>
+          <span class="chip">Growth</span>
+          <span class="chip">Technique</span>
+          <span class="chip">Musicality</span>
+          <span class="chip">Portfolio</span>
+        </div>
+      </div>
+      <div class="admission__side">
+        <div class="ph" style="aspect-ratio:4/3;">
+          <img src="images/solo-vocal-suit-stage.jpg" alt="입시 실기 무대 — 보컬">
+          <span class="ph__tag">ENTRANCE EXAM</span>
+        </div>
+        <a href="https://blog.naver.com/ym-music/223375369826" target="_blank" rel="noopener" class="btn btn--primary" style="align-self:flex-start;">와이엠뮤직의 교육철학</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BLOG — auto-pulled from Naver Blog RSS (client-side fetch,
+     see loadNaverBlog() in the script at the bottom). If the feed
+     fails to load (proxy down, feed URL changed) it falls back to
+     a plain link so the section never looks broken.
+============================================================ -->
+<section id="blog" class="section-pad-tight">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">BLOG</span>
+      <h2>와이엠뮤직 블로그</h2>
+      <p>레슨 이야기와 학원 소식, 새 글이 올라오면 여기서 가장 먼저 보여드려요.</p>
+    </div>
+
+    <div class="blog__track" id="blogTrack">
+      <p class="blog__fallback">최신 글을 불러오는 중…</p>
+    </div>
+
+    <div class="insta__foot reveal">
+      <a href="https://blog.naver.com/ym-music" target="_blank" rel="noopener" class="btn btn--ghost">블로그 전체 보기 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     INSTAGRAM
+============================================================ -->
+<section id="instagram" class="section-pad">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">INSTAGRAM</span>
+      <h2>오늘도 YM MUSIC에서는<br>누군가의 음악이 시작되고 있습니다.</h2>
+    </div>
+
+    <div class="insta__grid reveal-stagger">
+      <div class="ph ph--video reveal" style="--i:0" data-yt="C0qD3lgUAn0" role="button" tabindex="0" aria-label="유튜브 쇼츠 재생"><img src="images/reel-drum-thumb.jpg" alt="드럼 연주 영상"><span class="ph__play"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4l14 8-14 8V4z" fill="#201C17"/></svg></span></div>
+      <div class="ph ph--video reveal" style="--i:1" data-yt="LfL-y38Ksj0" role="button" tabindex="0" aria-label="유튜브 쇼츠 재생"><img src="images/reel-stage-guitar-thumb.jpg" alt="YM MUSIC 무대 공연 영상"><span class="ph__play"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4l14 8-14 8V4z" fill="#201C17"/></svg></span></div>
+      <div class="ph ph--video reveal" style="--i:2" data-yt="xqPv57eC398" role="button" tabindex="0" aria-label="유튜브 쇼츠 재생"><img src="images/reel-piano-thumb.jpg" alt="피아노 연주 영상"><span class="ph__play"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4l14 8-14 8V4z" fill="#201C17"/></svg></span></div>
+      <div class="ph reveal" style="--i:3"><img src="images/acoustic-cardigan-crowd.jpg" alt="어쿠스틱 기타 치며 노래하는 학생"></div>
+      <div class="ph reveal" style="--i:4"><img src="images/mc-vocal-intro.jpg" alt="공연 진행 멘트"></div>
+      <div class="ph reveal" style="--i:5"><img src="images/band-closeup-crowd.jpg" alt="관객과 가까이에서 연주하는 학생 밴드"></div>
+    </div>
+    <div class="insta__foot reveal">
+      <a href="https://www.instagram.com/ym._.music_academy/" target="_blank" rel="noopener" class="btn btn--ghost">Instagram에서 더 보기 →</a>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>카카오톡 상담</span><span class="dot">★</span><span>전화 상담</span><span class="dot">★</span><span>인스타그램 팔로우</span><span class="dot">★</span><span>블로그 구경하기</span><span class="dot">★</span><span>지도에서 찾아오기</span><span class="dot">★</span>
+    <span>카카오톡 상담</span><span class="dot">★</span><span>전화 상담</span><span class="dot">★</span><span>인스타그램 팔로우</span><span class="dot">★</span><span>블로그 구경하기</span><span class="dot">★</span><span>지도에서 찾아오기</span><span class="dot">★</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     CONTACT
+============================================================ -->
+<section id="contact" class="section-pad-tight">
+  <div class="container">
+    <div class="contact reveal">
+      <h2>Your music starts here.</h2>
+      <p class="contact__kr">당신의 음악은<br>여기서 시작될 수 있습니다.</p>
+      <div class="contact__actions">
+        <a href="https://talk.naver.com/w4sx5p?frm=pblog&ref=https%3A%2F%2Fblog.naver.com%2Fym-music%2F223375369826#nafullscreen" target="_blank" rel="noopener" class="btn btn--amber">상담하기</a>
+        <a href="http://pf.kakao.com/_xeAvTG/chat" target="_blank" rel="noopener" class="btn btn--ghost">카카오톡 상담</a>
+        <a href="tel:031-8003-7833" class="btn btn--ghost">전화 상담</a>
+      </div>
+      <div class="contact__info">
+        <div><b>Address</b>경기도 화성시 동탄솔빛로 51 (반송동) 인창프라자 403호<br>솔빛마을 상가 올리브영 · 고봉민김밥 건물<br><a href="https://naver.me/F1awxxR3" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">지도에서 보기 →</a></div>
+        <div><b>Tel</b><a href="tel:031-8003-7833" style="color:inherit;">031-8003-7833</a></div>
+        <div><b>Email</b><a href="mailto:ym-music@naver.com" style="color:inherit;">ym-music@naver.com</a></div>
+        <div><b>Hours</b>평일 오후 2시 – 오후 10시<br>토요일 오후 12시 – 오후 6시<br>공휴일은 레슨만 진행하며 연습실은 개방하지 않습니다.</div>
+        <div><b>Parking</b>건물 내 주차장 또는 학원 후면 공영주차장<br>무료주차 등록은 학원으로 문의</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer>
+  <div class="container">
+    <div class="footer__row">
+      <span class="footer__logo">YM MUSIC</span>
+      <div class="footer__links">
+        <a href="https://www.instagram.com/ym._.music_academy/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://blog.naver.com/ym-music" target="_blank" rel="noopener">Naver Blog</a>
+        <a href="http://pf.kakao.com/_xeAvTG/chat" target="_blank" rel="noopener">KakaoTalk</a>
+        <a href="mailto:ym-music@naver.com">Email</a>
+        <a href="tel:031-8003-7833">전화 문의</a>
+      </div>
+    </div>
+    <p class="footer__copy">© YM MUSIC. ALL RIGHTS RESERVED. · 경기도 화성시 동탄솔빛로 51 인창프라자 403호 · 031-8003-7833</p>
+  </div>
+</footer>
+
+<div class="yt-modal" id="ytModal" aria-hidden="true">
+  <div class="yt-modal__box">
+    <button class="yt-modal__close" id="ytModalClose" aria-label="닫기" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <iframe id="ytModalFrame" src="" title="YM MUSIC 유튜브 쇼츠" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+  </div>
+</div>
+
+<div class="photo-modal" id="photoModal" aria-hidden="true">
+  <div class="photo-modal__box">
+    <button class="photo-modal__close" id="photoModalClose" aria-label="닫기" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <img id="photoModalImg" src="" alt="">
+  </div>
+</div>
+
+<script>
+// YouTube Shorts lightbox
+(() => {
+  const modal = document.getElementById('ytModal');
+  const frame = document.getElementById('ytModalFrame');
+  const closeBtn = document.getElementById('ytModalClose');
+
+  const box = document.querySelector('.yt-modal__box');
+  const openShort = (id, wide) => {
+    frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`;
+    box.classList.toggle('wide', !!wide);
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeShort = () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    frame.src = ''; // stop playback
+  };
+
+  document.querySelectorAll('[data-yt]').forEach(tile => {
+    const wide = tile.hasAttribute('data-wide');
+    tile.addEventListener('click', () => openShort(tile.dataset.yt, wide));
+    tile.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openShort(tile.dataset.yt, wide); }
+    });
+  });
+
+  closeBtn.addEventListener('click', closeShort);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeShort(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeShort(); });
+})();
+
+// Photo lightbox (FACILITY stills)
+(() => {
+  const modal = document.getElementById('photoModal');
+  const img = document.getElementById('photoModalImg');
+  const closeBtn = document.getElementById('photoModalClose');
+
+  const openPhoto = (src, alt) => {
+    img.src = src;
+    img.alt = alt || '';
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+  const closePhoto = () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    img.src = '';
+  };
+
+  document.querySelectorAll('[data-photo]').forEach(tile => {
+    const label = tile.querySelector('img')?.alt || '';
+    tile.addEventListener('click', () => openPhoto(tile.dataset.photo, label));
+    tile.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPhoto(tile.dataset.photo, label); }
+    });
+  });
+
+  closeBtn.addEventListener('click', closePhoto);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closePhoto(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePhoto(); });
+})();
+
+// header state
+const nav = document.getElementById('nav');
+const burger = document.getElementById('navBurger');
+const navLinks = document.getElementById('navLinks');
+
+const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+onScroll();
+window.addEventListener('scroll', onScroll, { passive:true });
+
+burger.addEventListener('click', () => {
+  const open = nav.classList.toggle('open');
+  burger.setAttribute('aria-expanded', open);
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  nav.classList.remove('open');
+  burger.setAttribute('aria-expanded', false);
+}));
+
+// reveal on scroll
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+}, { threshold:0.16, rootMargin:'0px 0px -6% 0px' });
+document.querySelectorAll('.reveal, .waveform').forEach(el => io.observe(el));
+
+// touch-friendly lesson card toggle (hover fallback)
+document.querySelectorAll('.lesson__card').forEach(card => {
+  card.addEventListener('click', (e) => {
+    if (window.matchMedia('(hover: none)').matches && !card.classList.contains('active')) {
+      // first tap on touch devices: just reveal the description, don't navigate yet
+      e.preventDefault();
+      document.querySelectorAll('.lesson__card.active').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+    }
+    // second tap on an already-active card (or any click with hover support): let the link navigate normally
+  });
+});
+
+// ============================================================
+// Naver Blog — pull the latest posts client-side via RSS.
+// Naver's RSS endpoint doesn't send CORS headers, so a public
+// read-only proxy relays the XML. No single free proxy has a
+// real uptime guarantee, so this tries a short list of them in
+// order and uses whichever responds first — if all of them are
+// down at once the fallback card below keeps the section looking
+// intentional instead of broken. For a fully reliable long-term
+// setup, a tiny serverless function (Cloudflare Worker / Vercel)
+// that fetches and caches the feed is the sturdier option.
+// (corsproxy.io was dropped from this list — its free tier now
+// only serves requests from localhost, so it silently fails on
+// any deployed domain.)
+// ============================================================
+async function loadNaverBlog(){
+  const track = document.getElementById('blogTrack');
+  const feedUrl = 'https://rss.blog.naver.com/ym-music.xml';
+
+  const fallback = () => {
+    track.innerHTML = '<div class="blog__fallback"><span class="chip-sticker">📝 와이엠뮤직 블로그</span><p>최신 글을 자동으로 불러오지 못했어요. 네이버 블로그에서 바로 확인해보세요.</p><a href="https://blog.naver.com/ym-music" target="_blank" rel="noopener" class="btn btn--primary">네이버 블로그 바로가기 →</a></div>';
+  };
+
+  const fetchWithTimeout = (url, ms) => {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), ms);
+    return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(id));
+  };
+
+  const dateFromAny = (raw) => {
+    if (!raw) return '';
+    const d = new Date(raw);
+    return isNaN(d) ? '' : d.toLocaleDateString('ko-KR', { year:'numeric', month:'2-digit', day:'2-digit' });
+  };
+
+  const renderCards = (items) => {
+    track.innerHTML = '';
+    items.forEach((it, i) => {
+      const card = document.createElement('a');
+      card.href = it.link || 'https://blog.naver.com/ym-music';
+      card.target = '_blank';
+      card.rel = 'noopener';
+      card.className = 'blog__card';
+
+      const thumb = document.createElement('div');
+      thumb.className = it.thumb ? 'blog__thumb' : `blog__thumb ph ph--${(i % 6) + 1}`;
+      if (it.thumb) {
+        thumb.style.backgroundImage = `url('${it.thumb}')`;
+        // if the thumbnail URL fails to load (e.g. Naver referrer-blocks it), fall back to a placeholder pattern
+        const test = new Image();
+        test.onerror = () => { thumb.style.backgroundImage = ''; thumb.classList.add('ph', `ph--${(i % 6) + 1}`); };
+        test.src = it.thumb;
+      }
+
+      const body = document.createElement('div');
+      body.className = 'blog__body';
+      body.innerHTML = `<span class="blog__date">${it.date || ''}</span><h3></h3>`;
+      body.querySelector('h3').textContent = it.title || '';
+
+      card.appendChild(thumb);
+      card.appendChild(body);
+      track.appendChild(card);
+    });
+  };
+
+  // 1) Primary: rss2json — a service built specifically for turning RSS into
+  // JSON in the browser. It also extracts a clean thumbnail per item, which
+  // is more reliable than scraping an <img> tag out of raw description HTML.
+  try{
+    const api = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feedUrl);
+    const res = await fetchWithTimeout(api, 7000);
+    const data = await res.json();
+    if (data && data.status === 'ok' && Array.isArray(data.items) && data.items.length) {
+      const items = data.items.slice(0, 4).map(it => ({
+        title: (it.title || '').trim(),
+        link: it.link,
+        date: dateFromAny(it.pubDate),
+        thumb: it.thumbnail || (it.enclosure && it.enclosure.link) || (it.description || '').match(/<img[^>]+src="([^"]+)"/i)?.[1] || null,
+      }));
+      renderCards(items);
+      return;
+    }
+  }catch(err){ /* fall through to backup proxies */ }
+
+  // 2) Backup: raw-XML CORS proxies, tried in order, in case rss2json's
+  // free tier is rate-limited or down.
+  const proxies = [
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(feedUrl),
+    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(feedUrl),
+    'https://cors.x2u.in/' + feedUrl,
+  ];
+
+  let xmlText = null;
+  for (const proxied of proxies) {
+    try{
+      const res = await fetchWithTimeout(proxied, 6000);
+      if (!res.ok) continue;
+      const text = await res.text();
+      if (!text || !text.includes('<item')) continue;
+      xmlText = text;
+      break;
+    }catch(err){
+      continue;
+    }
+  }
+
+  if (!xmlText) { fallback(); return; }
+
+  try{
+    const xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+    const items = Array.from(xml.querySelectorAll('item')).slice(0, 4);
+    if (!items.length) throw new Error('no items in feed');
+
+    renderCards(items.map(item => {
+      const descHtml = item.querySelector('description')?.textContent || '';
+      return {
+        title: (item.querySelector('title')?.textContent || '').trim(),
+        link: item.querySelector('link')?.textContent || 'https://blog.naver.com/ym-music',
+        date: dateFromAny(item.querySelector('pubDate')?.textContent || ''),
+        thumb: descHtml.match(/<img[^>]+src="([^"]+)"/i)?.[1] || null,
+      };
+    }));
+  }catch(err){
+    fallback();
+  }
+}
+loadNaverBlog();
+</script>
+</body>
+</html>
