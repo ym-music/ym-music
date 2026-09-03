@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ym-music.github.io/ym-music/sitemap.xml
